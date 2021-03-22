@@ -1,0 +1,10 @@
+@model StudentProfile
+
+<form asp-action="DeleteStudentProfile" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete StudentProfile" })
+    <input type="hidden" asp-for="StudentID" />
+    <div class="modal-body form-horizontal">
+        Are you sure you want to delete @Model.LastName?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>

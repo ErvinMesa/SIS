@@ -1,0 +1,12 @@
+﻿@model EnrolledProgram
+@using SIS.Models
+
+<form asp-action="DeleteCountry" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete Program" })
+    <input type="hidden" asp-for="ProgramID" />
+    <div class="modal-body form-horizontal">
+        Delete this record? @Model.ProgramName?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>
+

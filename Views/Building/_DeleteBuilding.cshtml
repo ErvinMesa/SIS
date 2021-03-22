@@ -1,0 +1,11 @@
+﻿@model Building
+
+<form asp-action="DeleteBuilding" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete Building" })
+    <input type="hidden" asp-for="BuildingID" />
+    <div class="modal-body form-horizontal">
+        Are you sure you want to delete @Model.BuildingName?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>
+

@@ -1,0 +1,51 @@
+﻿@model College
+
+<form asp-action="AddEditCollege" class="needs-validation" role="form">
+    @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = $"{((Model.CollegeID == 0) ? "Add" : "Edit")} College" })
+    <input type="hidden" asp-for="CollegeID" />
+    <div class="modal-body form-horizontal">
+        <div class="form-group row">
+            <label asp-for="CollegeCode" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="CollegeCode" class="form-control" required />
+                <span asp-validation-for="CollegeCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="CollegeName" class="control-label col-md-2"></label>
+            <div class="col-md-5">
+                <input asp-for="CollegeName" class="form-control" required />
+                <span asp-validation-for="CollegeName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="NameofDean" class="control-label col-md-2"></label>
+            <div class="col-md-5">
+                <input asp-for="NameofDean" class="form-control" required />
+                <span asp-validation-for="NameofDean" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })
+</script>

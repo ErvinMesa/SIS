@@ -1,0 +1,64 @@
+@model Course
+
+<form asp-action="AddEditCourse" class="needs-validation" role="form">
+    @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = $"{((Model.CourseID == 0) ? "Add" : "Edit")} Course" })
+    <input type="hidden" asp-for="CourseID" />
+    <div class="modal-body form-horizontal">
+        <div class="form-group row">
+            <label asp-for="CourseCode" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="CourseCode" class="form-control" required />
+                <span asp-validation-for="CourseCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="CourseDescription" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="CourseDescription" class="form-control" required />
+                <span asp-validation-for="CourseDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="AcademicUnit" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="AcademicUnit" class="form-control" required />
+                <span asp-validation-for="AcademicUnit" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="ContactHours" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="ContactHours" class="form-control" required />
+                <span asp-validation-for="ContactHours" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="TuitionUnit" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="TuitionUnit" class="form-control" required />
+                <span asp-validation-for="TuitionUnit" class="text-danger"></span>
+            </div>
+        </div>
+
+    @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })
+</script>

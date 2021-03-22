@@ -1,0 +1,10 @@
+@model Province
+
+<form asp-action="DeleteProvince" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete Province" })
+    <input type="hidden" asp-for="ProvinceID" />
+    <div class="modal-body form-horizontal">
+        Are you sure you want to delete @Model.ProvinceName?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>

@@ -1,0 +1,94 @@
+﻿@using SIS.Models
+@model EnrolledProgram
+
+@{
+    ViewData["Title"] = "Program - Create";
+}
+
+<div class="top-buffer"></div>
+
+<div class="card card-flat">
+    <div class="card-header">
+        <div class="card-title">Program - Edit</div>
+    </div>
+
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <form asp-action="Edit" id="ProgramForm" class="needs-validation" role="form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group row">
+                        <label asp-for="CollegeID" class="control-label col-md-2"></label>
+                        <div class="col-md-4">
+                            <select asp-for="CollegeID" class="s2" asp-items="@Model.ICollege">
+                                <option value="0">Please select one</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label asp-for="ProgramCode" class="control-label col-md-2"></label>
+                        <div class="col-md-4">
+                            <input asp-for="ProgramCode" class="form-control" required />
+                            <span asp-validation-for="ProgramCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label asp-for="ProgramName" class="control-label col-md-2"></label>
+                        <div class="col-md-4">
+                            <input asp-for="ProgramName" class="form-control" required />
+                            <span asp-validation-for="ProgramName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="NumberofSemester" class="control-label col-md-2"></label>
+                        <div class="col-md-2">
+                            <input asp-for="NumberofSemester" class="form-control" required />
+                            <span asp-validation-for="NumberofSemester" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <div class="col-md-12 text-right">
+                            <button id="btnSave" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                            <a asp-controller="EnrolledProgram" asp-action="Index" class="btn btn-dark"> Back To List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action-Program", AreaLabeledId = "modal-action-Program-label", Size = ModalSize.Large })
+
+
+@section scripts
+    {
+    <script src="~/lib/Select2/select2.min.js"></script>
+    <script src="~/lib/bootstrap-sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/DatePicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/bootstrap-input-spinner/src/bootstrap-input-spinner.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".s2").select2({
+                theme: 'bootstrap4',
+                width: 'style',
+                placeholder: $(this).attr('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear'))
+            });
+        });
+    </script>
+}
+
+<link rel="stylesheet" href="~/lib/Select2/select2.min.css" />
+<link rel="stylesheet" href="~/lib/Select2/select2-bootstrap4.min.css" />
+<link href="~/lib/bootstrap-sweetalert/sweetalert.min.css" rel="stylesheet" />
+<link href="~/lib/DatePicker/bootstrap-datepicker.min.css" rel="stylesheet" />

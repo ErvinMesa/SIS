@@ -1,0 +1,58 @@
+@model Room
+
+<form asp-action="AddEditRoom" class="needs-validation" role="form">
+    @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = $"{((Model.RoomID == 0) ? "Add" : "Edit")} Room" })
+    <input type="hidden" asp-for="RoomID" />
+    <div class="modal-body form-horizontal">
+        <div class="form-group row">
+             <label asp-for="BuildingID" class="control-label col-md-2"></label>
+             <div class="col-md-4">
+                 <select asp-for="BuildingID" class="s2" asp-items="@Model.IBuilding">
+                     <option value="0">Please select one</option>
+                 </select>
+             </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="RoomCode" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="RoomCode" class="form-control" required />
+                <span asp-validation-for="RoomCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="RoomName" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="RoomName" class="form-control" required />
+                <span asp-validation-for="RoomName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="Capacity" class="control-label col-md-2"></label>
+            <div class="col-md-3">
+                <input asp-for="Capacity" class="form-control" required />
+                <span asp-validation-for="Capacity" class="text-danger"></span>
+            </div>
+        </div>
+
+    @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })
+</script>

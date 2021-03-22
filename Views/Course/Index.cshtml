@@ -1,0 +1,76 @@
+@using SIS.Models
+@model Course
+
+
+@{
+    ViewData["Title"] = "Course";
+}
+
+<div class="top-buffer"></div>
+
+<div class="card card-flat">
+    <div class="card-header">
+        <div class="card-title">Course List</div>
+    </div>
+
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                </div>
+                <div class="col-md-4">
+                    <div hidden class="btn-group  float-right mt-1">
+                        <a id="createCourseModal" data-toggle="modal" asp-action="AddEditCourse" data-target="#modal-action-Course" class="btn btn-dark">
+                            <i class="fa fa-plus"></i> New
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="spacer5"></div>
+            <div class="row">
+                <div class="table-responsive">
+                    <table id="tblCourse" class="table table-striped table-hover table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th><label asp-for="CourseID" class="control-label"></label></th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th><label asp-for="CourseCode" class="control-label"></label></th>
+                                <th><label asp-for="CourseDescription" class="control-label"></label></th>
+                                <th><label asp-for="AcademicUnit" class="control-label"></label></th>
+                                <th><label asp-for="ContactHours" class="control-label"></label></th>
+                                <th><label asp-for="TuitionUnit" class="control-label"></label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action-Course", AreaLabeledId = "modal-action-Course-label", Size = ModalSize.Large })
+
+@section scripts
+{
+
+    <script src="~/lib/BootstrapDatatable/jquery.dataTables.min.js"></script>
+    <script src="~/lib/BootstrapDatatable/dataTables.bootstrap4.min.js" asp-append-version="true"></script>
+    <script src="~/js/dataTables.rowReorder.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/Responsive-2.2.2/js/dataTables.responsive.min.js" asp-append-version="true"></script>
+    <script src="~/js/dataTables.buttons.min.js" asp-append-version="true"></script>
+
+    <script src="~/js/Course-Index.js" asp-append-version="true"></script>
+    <script src="~/lib/Select2/select2.min.js"></script>
+    <script src="~/lib/bootstrap-input-spinner/src/bootstrap-input-spinner.js"></script>
+
+}
+
+
+
+<link href="~/css/BootstrapDatatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="~/css/icheck-bootstrap.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/css/responsive.dataTables.min.css" />
+<link rel="stylesheet" href="~/lib/Select2/select2.min.css" />
+<link rel="stylesheet" href="~/lib/Select2/select2-bootstrap4.min.css" />
