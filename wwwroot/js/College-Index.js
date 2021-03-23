@@ -63,11 +63,20 @@
                         "width": "5%", "targets": [2], "sortable": false
 
                     },
+                    {
+                        "width": "5%", "targets": [3], "sortable": false
+
+                    },
                     { "width": "10%", "targets": 3 }
                 ],
 
             "columns": [
                 { "data": "CollegeID", "name": "CollegeID", "autoWidth": true, "visible": false },
+                {
+                    className: 'align-middle text-center',
+                    "render": function (data, type, full, meta) { return '<a  id="tblBtnUpl"' + full.CollegeID + ' class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-action-College" href="/College/UploadLogo?CollegeID=' + full.CollegeID + '"><i class="fa fa-trash"></i></a>'; }
+
+                },
                 {
                     className: 'align-middle text-center',
                     "render": function (data, type, full, meta) { return '<a  id="tblBtnEdt"' + full.CollegeID + ' class="btn btn-outline-info" data-toggle="modal" data-target="#modal-action-College" href="/College/AddEditCollege?CollegeID=' + full.CollegeID + '"><i class="fa fa-pencil-alt"></i></a>'; }
