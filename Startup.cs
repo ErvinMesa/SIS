@@ -28,6 +28,27 @@ namespace SIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddTransient<ICollegeService, CollegeService>();
+
+            services.AddScoped<ICollegeService, CollegeService>();
+
+            services.AddSingleton<IFileProvider>(
+                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

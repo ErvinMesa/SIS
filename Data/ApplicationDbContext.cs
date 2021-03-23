@@ -25,8 +25,8 @@ namespace SIS.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
         
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

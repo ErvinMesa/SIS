@@ -13,24 +13,34 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using SIS.Data;
 using SIS.Models;
+using WebApi.Services;
+using System.IO;
+using Microsoft.Extensions.Options;
+using WebApi.Helpers;
 
 namespace SIS.Controllers
 {
+
+    [Authorize(Roles = "Registrar, Staff")]
     public class CollegeController : Controller
     {
 
+        private ICollegeService _collegeService;
+        private readonly AppSettings _appSettings;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager; // used for authentication 
         private readonly SignInManager<IdentityUser> _signInManager; // used for authentication 
         private readonly ILogger<RegisterModel> _logger;
 
         public CollegeController(ApplicationDbContext context, SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager)
+            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager, ICollegeService collegeService, IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            _collegeService = collegeService;
+            _appSettings = appSettings.Value;
         }
         public IActionResult Index()
         {
@@ -98,14 +108,22 @@ namespace SIS.Controllers
         public async Task<IActionResult> AddEditCollege(int CollegeID)
         {
             Guid gid = Guid.NewGuid();
+
             College model = new College();
             string userID = User.Identity.Name;
+            model.FileStamp = gid.ToString();
+            model.RecognizeDate = DateTime.Now;
+            model.IsActive = true;
 
             if (CollegeID != 0)
             {
-                model = await _context.Colleges
-                 .FirstOrDefaultAsync(m => m.CollegeID == CollegeID);
+                //model = await _context.Colleges
+                // .FirstOrDefaultAsync(m => m.CollegeID == CollegeID);
+                model = _collegeService.GetCollegeInfo(CollegeID);
+
+
             }
+         
 
             return PartialView("_AddEditCollege", model);
         }
@@ -118,11 +136,14 @@ namespace SIS.Controllers
             {
                 if (model.CollegeID == 0)
                 {
-                    _context.Add(model);
+                    //_context.Add(model);
+
+                    _collegeService.Create(model);
                 }
                 else
                 {
-                    _context.Update(model);
+                    //_context.Update(model);
+                    _collegeService.Update(model);
                 }
 
                 await _context.SaveChangesAsync();
@@ -176,6 +197,62 @@ namespace SIS.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> UploadLogo(int CollegeID)
+        {
+            Guid gid = Guid.NewGuid();
+
+            College model = new College();
+            string userID = User.Identity.Name;
+            if (model.FileStamp != "")
+            {
+                model.FileStamp = gid.ToString();
+            }
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> UploadLogo(List<IFormFile> files, College viewModel)
+        {
+            string userId = HttpContext.User.Identity.Name;
+
+            var folderPath = $"wwwroot\\AppPhoto";
+
+            if (Directory.Exists(folderPath) == false)
+            {
+                DirectoryInfo di = Directory.CreateDirectory(folderPath);
+            }
+
+            long size = files.Sum(f => f.Length);
+
+            var filePaths = new List<string>();
+            foreach (var file in Request.Form.Files)
+            {
+                //get uploaded file name: true to create temp name, false to get real name
+                var model = _collegeService.GetCollegeInfo(viewModel.CollegeID);
+
+
+                var fileType = Path.GetExtension(file.FileName);
+                var fileName = model.FileStamp + fileType;
+                model.Logo = fileName;
+                _collegeService.Update(model);
+
+                if (file.Length > 0)
+                {
+                    if (fileName.ToLower().EndsWith(".png") || fileName.ToLower().EndsWith(".jpg") || fileName.ToLower().EndsWith(".bmp"))
+                    {
+                        // optional : server side resize create image with watermark
+                        // these steps requires LazZiya.ImageResize package from nuget.org
+                        // upload and save files to upload folder
+                        using (var stream = new FileStream($"wwwroot\\AppPhoto\\{fileName}", FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                }
+            }
+            return Ok(new { count = files.Count, size, filePaths });
+        }
         private bool CollegeExists(int id)
         {
             return _context.Colleges.Any(e => e.CollegeID == id);

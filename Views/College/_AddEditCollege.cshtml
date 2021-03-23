@@ -3,6 +3,9 @@
 <form asp-action="AddEditCollege" class="needs-validation" role="form">
     @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = $"{((Model.CollegeID == 0) ? "Add" : "Edit")} College" })
     <input type="hidden" asp-for="CollegeID" />
+    <input type="hidden" asp-for="FileStamp" />
+    <input type="hidden" asp-for="Logo" />
+
     <div class="modal-body form-horizontal">
         <div class="form-group row">
             <label asp-for="CollegeCode" class="control-label col-md-2"></label>
@@ -13,7 +16,7 @@
         </div>
         <div class="form-group row">
             <label asp-for="CollegeName" class="control-label col-md-2"></label>
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <input asp-for="CollegeName" class="form-control" required />
                 <span asp-validation-for="CollegeName" class="text-danger"></span>
             </div>
@@ -25,13 +28,52 @@
                 <span asp-validation-for="NameofDean" class="text-danger"></span>
             </div>
         </div>
+        <div class="form-group row">
+
+
+            <label asp-for="RecognizeDate" class="control-label col-md-2"></label>
+            <div class="col-md-4">
+                <div class="input-group date" data-provide="datepicker">
+                    <input name="RecognizeDate" id="RecognizeDate" value="@Model.RecognizeDate.ToShortDateString()" required class="datepicker form-control" />
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="RecognizeDate" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="NumberOfProgram" class="control-label col-md-2"></label>
+            <div class="col-md-2">
+                <input asp-for="NumberOfProgram" min="1" max="5" type="number" class="form-control" required />
+                <span asp-validation-for="NumberOfProgram" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2"></label>
+            <div class="checkbox icheck-turquoise">
+                @Html.CheckBoxFor(model => model.IsActive)
+                @Html.LabelFor(c => c.IsActive, new { @class = "col-sm-4 control-label" })
+            </div>
+        </div>
+        <img id="myImg" src="@Url.Content(Model.LogoImageUrl)" alt="Snow" style="width:100%;max-width:300px">
+
+
     </div>
 
     @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
 </form>
-
+<script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $('.datepicker').datepicker({
+            format: 'mm/dd/yyyy'
+        });
+
         'use strict';
         window.addEventListener('load', function () {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -49,3 +91,4 @@
         }, false);
     })
 </script>
+<link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
