@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "DZeBZvrK0m3xlIK3MgWLBHc2GkYQrN4r5SEeDFa2aE+a4w0PLYkmiSZhufitHemgt8PRmyh/YBktOrrge9TnmA==",
+  "dgSpecHash": "J63/djZB1OPishp5Jo1C95ZQlkSS2qOeExvPCXnSN+G73OLLxDOHNsy0so3SzIuf2HTcXnxNf/KUF/bxVEH1cg==",
   "success": true,
   "projectFilePath": "D:\\School Work\\Yr 3 Season 2\\Phase 2\\Advanced Web Programming\\Midterm Exam\\SIS\\SIS.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\jerem\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.13\\microsoft.aspnetcore.authentication.jwtbearer.3.1.13.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.13\\microsoft.aspnetcore.cryptography.internal.3.1.13.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.13\\microsoft.aspnetcore.cryptography.keyderivation.3.1.13.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\3.1.8\\microsoft.aspnetcore.diagnostics.entityframeworkcore.3.1.8.nupkg.sha512",
