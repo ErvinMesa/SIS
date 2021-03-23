@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,7 +35,7 @@ namespace SIS.Models
 
         [Column(TypeName = "char(10)")]
         [DisplayName("Birth Date")]
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [Column(TypeName = "char(11)")]
         [DisplayName("Mobile Number")]
@@ -44,6 +45,10 @@ namespace SIS.Models
         [DisplayName("Email Address")]
         public string EmailAddress { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
+        [DisplayName("Student Picture")]
+        public string Picture { get; set; }
+
         [DisplayName("Province Name")]
         public int ProvinceID { get; set; }
 
@@ -52,6 +57,18 @@ namespace SIS.Models
 
         [DisplayName("Program Name")]
         public int ProgramID { get; set; }
+
+        public bool IsActive { get; set; }
+
+        [NotMapped]
+        public string PictureImageUrl { get; set; }
+
+        [Column(TypeName = "char(36)")]
+        [DisplayName("FileStamp")]
+        public string FileStamp { get; set; }
+
+        [NotMapped]
+        public IFormFile UploadFiles { set; get; }
 
         [NotMapped]
         public ICollection<SelectListItem> IProvince { get; set; }

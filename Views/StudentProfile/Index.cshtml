@@ -1,4 +1,4 @@
-@using SIS.Models
+﻿@using SIS.Models
 @model StudentProfile
 
 
@@ -10,7 +10,7 @@
 
 <div class="card card-flat">
     <div class="card-header">
-        <div class="card-title">StudentProfile List</div>
+        <div class="card-title">Weather Type List</div>
     </div>
 
     <div class="card-body">
@@ -33,6 +33,7 @@
                         <thead>
                             <tr>
                                 <th><label asp-for="StudentID" class="control-label"></label></th>
+                                <th>Upload</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                                 <th><label asp-for="LastName" class="control-label"></label></th>
@@ -65,7 +66,7 @@
     <script src="~/lib/datatables/Responsive-2.2.2/js/dataTables.responsive.min.js" asp-append-version="true"></script>
     <script src="~/js/dataTables.buttons.min.js" asp-append-version="true"></script>
 
-    <script src="~/js/StudentProfile-Index.js" asp-append-version="true"></script>
+    <script src="~/js/StudentProfile-index.js" asp-append-version="true"></script>
     <script src="~/lib/Select2/select2.min.js"></script>
     <script src="~/lib/bootstrap-input-spinner/src/bootstrap-input-spinner.js"></script>
 

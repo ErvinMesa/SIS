@@ -13,6 +13,7 @@ namespace WebApi.Controllers
     public class APIController : ControllerBase
     {
         private ICollegeService _collegeService;
+        private IStudentProfileService _studentService;
 
         public APIController(ICollegeService collegeService)
         {
@@ -33,6 +34,21 @@ namespace WebApi.Controllers
             if (college == null) return NotFound();
 
             return Ok(college);
+        }
+        [HttpGet("GetAllStudentProfile")]
+        public IActionResult GetAllStudentProfile()
+        {
+            var student = _studentService.GetAll();
+            return Ok(student);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetStudentById(int id)
+        {
+            var student = _studentService.GetStudentProfileInfo(id);
+            if (student == null) return NotFound();
+
+            return Ok(student);
         }
 
     }

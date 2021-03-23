@@ -13,24 +13,33 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using SIS.Data;
 using SIS.Models;
+using WebApi.Services;
+using System.IO;
+using Microsoft.Extensions.Options;
+using WebApi.Helpers;
 
 namespace SIS.Controllers
 {
+
+    [Authorize(Roles = "Registrar, Staff")]
     public class StudentProfileController : Controller
     {
-
+        private IStudentProfileService _studentService;
+        private readonly AppSettings _appSettings;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager; // used for authentication 
-        private readonly SignInManager<IdentityUser> _signInManager; // used for authentication 
+        private readonly UserManager<IdentityUser> _userManager; // used for authentication
+        private readonly SignInManager<IdentityUser> _signInManager; // used for authentication
         private readonly ILogger<RegisterModel> _logger;
 
         public StudentProfileController(ApplicationDbContext context, SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager)
+            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager, IStudentProfileService studentService, IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            _studentService = studentService;
+            _appSettings = appSettings.Value;
         }
         public IActionResult Index()
         {
@@ -45,7 +54,7 @@ namespace SIS.Controllers
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
                 // Paging Length 10,20
-                var length = Request.Form["length"].FirstOrDefault();        
+                var length = Request.Form["length"].FirstOrDefault();
                 // Sort Column Name
                 var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
                 // Sort Column Direction ( asc ,desc)
@@ -111,38 +120,45 @@ namespace SIS.Controllers
         }
 
         [HttpGet]
-public async Task<IActionResult> AddEditStudentProfile(int StudentID)
+        public async Task<IActionResult> AddEditStudentProfile(int StudentID)
         {
             Guid gid = Guid.NewGuid();
+
             StudentProfile model = new StudentProfile();
             model.IProvince = _context.Provinces
-                               .Select(a => new SelectListItem()
-                               {
-                                   Value = a.ProvinceID.ToString(),
-                                   Text = a.ProvinceName
-                               }).OrderBy(a => a.Value)
-                               .ToList();
+                        .Select(a => new SelectListItem()
+                        {
+                            Value = a.ProvinceID.ToString(),
+                            Text = a.ProvinceName
+                        }).OrderBy(a => a.Value)
+                        .ToList();
             model.ICity = _context.Cities
-                               .Select(a => new SelectListItem()
-                               {
-                                   Value = a.CityID.ToString(),
-                                   Text = a.CityName
-                               }).OrderBy(a => a.Value)
-                               .ToList();
+                        .Select(a => new SelectListItem()
+                        {
+                            Value = a.CityID.ToString(),
+                            Text = a.CityName
+                        }).OrderBy(a => a.Value)
+                        .ToList();
             model.IProgram = _context.EnrolledPrograms
-                               .Select(a => new SelectListItem()
-                               {
-                                   Value = a.ProgramID.ToString(),
-                                   Text = a.ProgramName
-                               }).OrderBy(a => a.Value)
-                               .ToList();
+                        .Select(a => new SelectListItem()
+                        {
+                            Value = a.ProgramID.ToString(),
+                            Text = a.ProgramName
+                        }).OrderBy(a => a.Value)
+                        .ToList();
             string userID = User.Identity.Name;
+            model.FileStamp = gid.ToString();
+            model.IsActive = true;
 
             if (StudentID != 0)
             {
-                model = await _context.StudentProfiles
-                 .FirstOrDefaultAsync(m => m.StudentID == StudentID);
+                //model = await _context.StudentProfiles
+                // .FirstOrDefaultAsync(m => m.StudentID == StudentID);
+                model = _studentService.GetStudentProfileInfo(StudentID);
+
+
             }
+        
 
             return PartialView("_AddEditStudentProfile", model);
         }
@@ -155,11 +171,14 @@ public async Task<IActionResult> AddEditStudentProfile(int StudentID)
             {
                 if (model.StudentID == 0)
                 {
-                    _context.Add(model);
+                    //_context.Add(model);
+
+                    _studentService.Create(model);
                 }
                 else
                 {
-                    _context.Update(model);
+                    //_context.Update(model);
+                    _studentService.Update(model);
                 }
 
                 await _context.SaveChangesAsync();
@@ -169,16 +188,17 @@ public async Task<IActionResult> AddEditStudentProfile(int StudentID)
             return RedirectToAction(nameof(Index));
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> DeleteStudentProfile(int StudentProfileID)
+        public async Task<IActionResult> DeleteStudentProfile(int StudentID)
         {
             string name = string.Empty;
             StudentProfile model = new StudentProfile();
-            if (StudentProfileID != 0)
+            if (StudentID != 0)
             {
 
                 model = await _context.StudentProfiles
-                 .FirstOrDefaultAsync(m => m.StudentID == StudentProfileID);
+                .FirstOrDefaultAsync(m => m.StudentID == StudentID);
                 if (model != null)
                 {
                     name = model.LastName;
@@ -191,9 +211,9 @@ public async Task<IActionResult> AddEditStudentProfile(int StudentID)
         [HttpPost]
         public async Task<IActionResult> DeleteStudentProfile(IFormCollection form)
         {
-            int RecordID = Convert.ToInt32(form["StudentProfileID"]);
+            int RecordID = Convert.ToInt32(form["StudentID"]);
             var objCons = await _context.StudentProfiles
-                 .FirstOrDefaultAsync(m => m.StudentID == RecordID);
+                .FirstOrDefaultAsync(m => m.StudentID == RecordID);
             _logger.LogInformation($"Delete Account of {objCons.LastName}");
 
             try
@@ -213,6 +233,61 @@ public async Task<IActionResult> AddEditStudentProfile(int StudentID)
         }
 
 
+        public async Task<IActionResult> UploadLogo(int StudentID)
+        {
+            Guid gid = Guid.NewGuid();
+
+            StudentProfile model = new StudentProfile();
+            string userID = User.Identity.Name;
+            if (model.FileStamp != "")
+            {
+                model.FileStamp = gid.ToString();
+            }
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> UploadLogo(List<IFormFile> files, StudentProfile viewModel)
+        {
+            string userId = HttpContext.User.Identity.Name;
+
+            var folderPath = $"wwwroot\\AppPhoto";
+
+            if (Directory.Exists(folderPath) == false)
+            {
+                DirectoryInfo di = Directory.CreateDirectory(folderPath);
+            }
+
+            long size = files.Sum(f => f.Length);
+
+            var filePaths = new List<string>();
+            foreach (var file in Request.Form.Files)
+            {
+                //get uploaded file name: true to create temp name, false to get real name
+                var model = _studentService.GetStudentProfileInfo(viewModel.StudentID);
+
+
+                var fileType = Path.GetExtension(file.FileName);
+                var fileName = model.FileStamp + fileType;
+                model.Picture = fileName;
+                _studentService.Update(model);
+
+                if (file.Length > 0)
+                {
+                    if (fileName.ToLower().EndsWith(".png") || fileName.ToLower().EndsWith(".jpg") || fileName.ToLower().EndsWith(".bmp"))
+                    {
+                        // optional : server side resize create image with watermark
+                        // these steps requires LazZiya.ImageResize package from nuget.org
+                        // upload and save files to upload folder
+                        using (var stream = new FileStream($"wwwroot\\AppPhoto\\{fileName}", FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                }
+            }
+            return Ok(new { count = files.Count, size, filePaths });
+        }
         private bool StudentProfileExists(int id)
         {
             return _context.StudentProfiles.Any(e => e.StudentID == id);

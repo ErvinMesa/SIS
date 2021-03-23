@@ -70,23 +70,26 @@
                 { "data": "StudentID", "name": "StudentID", "autoWidth": true, "visible": false },
                 {
                     className: 'align-middle text-center',
-                    "render": function (data, type, full, meta) { return '<a  id="tblBtnEdt"' + full.StudentProfileID + ' class="btn btn-outline-info" data-toggle="modal" data-target="#modal-action-StudentProfile" href="/StudentProfile/AddEditStudentProfile?StudentID=' + full.StudentProfileID + '"><i class="fa fa-pencil-alt"></i></a>'; }
+                    "render": function (data, type, full, meta) { return '<a  id="tblBtnUpload"' + full.StudentID + ' class="btn btn-outline-success" href="/StudentProfile/UploadLogo?StudentID=' + full.StudentID + '"><i class="fa fa-upload"></i></a>'; }
                 },
                 {
                     className: 'align-middle text-center',
-                    "render": function (data, type, full, meta) { return '<a  id="tblBtnDel"' + full.StudentProfileID + ' class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-action-StudentProfile" href="/StudentProfile/DeleteStudentProfile?StudentID=' + full.StudentProfileID + '"><i class="fa fa-trash"></i></a>'; }
+                    "render": function (data, type, full, meta) { return '<a  id="tblBtnEdt"' + full.StudentID + ' class="btn btn-outline-info" data-toggle="modal" data-target="#modal-action-StudentProfile" href="/StudentProfile/AddEditStudentProfile?StudentID=' + full.StudentID + '"><i class="fa fa-pencil-alt"></i></a>'; }
+                },
+                {
+                    className: 'align-middle text-center',
+                    "render": function (data, type, full, meta) { return '<a  id="tblBtnDel"' + full.StudentID + ' class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-action-StudentProfile" href="/StudentProfile/DeleteStudentProfile?StudentID=' + full.StudentID + '"><i class="fa fa-trash"></i></a>'; }
 
                 },
-                { "data": "LastName", "name": "LastName", "autoWidth": false },
                 { "data": "FirstName", "name": "FirstName", "autoWidth": false },
                 { "data": "MiddleName", "name": "MiddleName", "autoWidth": false },
                 { "data": "Gender", "name": "Gender", "autoWidth": false },
                 { "data": "BirthDate", "name": "BirthDate", "autoWidth": false },
                 { "data": "MobileNumber", "name": "MobileNumber", "autoWidth": false },
                 { "data": "EmailAddress", "name": "EmailAddress", "autoWidth": false },
-                { "data": "ProvinceName", "name": "ProvinceName", "autoWidth": false },
-                { "data": "CityName", "name": "CityName", "autoWidth": false },
-                { "data": "ProgramName", "name": "ProgramName", "autoWidth": false },
+                { "data": "ProvinceID", "name": "ProvinceID", "autoWidth": false },
+                { "data": "CityID", "name": "CityID", "autoWidth": false },
+                { "data": "ProgramID", "name": "ProgramID", "autoWidth": false },
             ]
 
         });
