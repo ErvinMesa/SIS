@@ -33,7 +33,6 @@ namespace SIS.Models
         [DisplayName("Gender")]
         public string Gender { get; set; }
 
-        [Column(TypeName = "char(10)")]
         [DisplayName("Birth Date")]
         public DateTime BirthDate { get; set; }
 

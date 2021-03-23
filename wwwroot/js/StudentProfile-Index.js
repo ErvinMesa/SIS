@@ -63,6 +63,10 @@
                         "width": "5%", "targets": [2], "sortable": false
 
                     },
+                    {
+                        "width": "5%", "targets": [3], "sortable": false
+
+                    },
                     { "width": "10%", "targets": 3 }
                 ],
 
@@ -81,15 +85,16 @@
                     "render": function (data, type, full, meta) { return '<a  id="tblBtnDel"' + full.StudentID + ' class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-action-StudentProfile" href="/StudentProfile/DeleteStudentProfile?StudentID=' + full.StudentID + '"><i class="fa fa-trash"></i></a>'; }
 
                 },
+                { "data": "LastName", "name": "FirstName", "autoWidth": false },
                 { "data": "FirstName", "name": "FirstName", "autoWidth": false },
                 { "data": "MiddleName", "name": "MiddleName", "autoWidth": false },
                 { "data": "Gender", "name": "Gender", "autoWidth": false },
                 { "data": "BirthDate", "name": "BirthDate", "autoWidth": false },
                 { "data": "MobileNumber", "name": "MobileNumber", "autoWidth": false },
                 { "data": "EmailAddress", "name": "EmailAddress", "autoWidth": false },
-                { "data": "ProvinceID", "name": "ProvinceID", "autoWidth": false },
-                { "data": "CityID", "name": "CityID", "autoWidth": false },
-                { "data": "ProgramID", "name": "ProgramID", "autoWidth": false },
+                { "data": "ProvinceName", "name": "ProvinceName", "autoWidth": false },
+                { "data": "CityName", "name": "CityName", "autoWidth": false },
+                { "data": "ProgramName", "name": "ProgramName", "autoWidth": false },
             ]
 
         });

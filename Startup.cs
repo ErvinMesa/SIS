@@ -51,6 +51,10 @@ namespace SIS
 
             services.AddScoped<ICollegeService, CollegeService>();
 
+            services.AddTransient<IStudentProfileService, StudentProfileService>();
+
+            services.AddScoped<IStudentProfileService, StudentProfileService>();
+
             services.AddSingleton<IFileProvider>(
                 new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
 

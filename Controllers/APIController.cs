@@ -20,6 +20,11 @@ namespace WebApi.Controllers
             _collegeService = collegeService;
         }
 
+        public APIController(IStudentProfileService studentService)
+        {
+            _studentService = studentService;
+        }
+
         [HttpGet("GetAllCollege")]
         public IActionResult GetAllCollege()
         {
