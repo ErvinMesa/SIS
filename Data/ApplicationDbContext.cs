@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SIS.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebApi.Helpers;
+using WebApi.Models;
 
 namespace SIS.Data
 {
@@ -26,6 +29,7 @@ namespace SIS.Data
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

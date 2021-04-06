@@ -468,3 +468,10 @@ D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\o
 D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\obj\Debug\netcoreapp3.1\Razor\Views\College\UploadLogo.cshtml.g.cs
 D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\obj\Debug\netcoreapp3.1\Razor\Views\StudentProfile\UploadLogo.cshtml.g.cs
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\bin\Debug\netcoreapp3.1\MailKit.dll
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\bin\Debug\netcoreapp3.1\MimeKit.dll
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\obj\Debug\netcoreapp3.1\Razor\Views\EmailTemplate\Create.cshtml.g.cs
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\obj\Debug\netcoreapp3.1\Razor\Views\EmailTemplate\Edit.cshtml.g.cs
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\obj\Debug\netcoreapp3.1\Razor\Views\EmailTemplate\Index.cshtml.g.cs
+D:\School Work\Yr 3 Season 2\Phase 2\Advanced Web Programming\Midterm Exam\SIS\bin\Debug\netcoreapp3.1\appsettings.backup.json

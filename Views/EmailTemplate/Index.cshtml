@@ -1,0 +1,82 @@
+﻿@using WebApi.Models
+@model EmailTemplate
+
+@{
+    ViewData["Title"] = "Email Template";
+}
+
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action-EmailTemplate", AreaLabeledId = "modal-action-EmailTemplate-label", Size = ModalSize.Large })
+
+
+
+<link href="~/css/BootstrapDatatable/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="~/css/icheck-bootstrap.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/css/responsive.dataTables.min.css" />
+<link rel="stylesheet" href="~/lib/Select2/select2.min.css" />
+<link rel="stylesheet" href="~/lib/Select2/select2-bootstrap4.min.css" />
+
+
+
+@section scripts
+    {
+    <script src="~/lib/BootstrapDatatable/jquery.dataTables.min.js"></script>
+    <script src="~/lib/BootstrapDatatable/dataTables.bootstrap4.min.js" asp-append-version="true"></script>
+    <script src="~/js/dataTables.rowReorder.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/Responsive-2.2.2/js/dataTables.responsive.min.js" asp-append-version="true"></script>
+    <script src="~/js/dataTables.buttons.min.js" asp-append-version="true"></script>
+
+    <script src="~/js/EmailTemplate-Index.js" asp-append-version="true"></script>
+
+
+    <script src="~/lib/Select2/select2.min.js"></script>
+    <script src="~/lib/bootstrap-input-spinner/src/bootstrap-input-spinner.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.dataTables_wrapper').css('width', $('#maincontent').width() * .96);
+        });
+
+        $(window).on('resize', function () {
+            $('.dataTables_wrapper').css('width', $('#maincontent').width() * .96);
+        });
+    </script>
+
+}
+
+
+<div class="content-heading">
+    <div>
+        EmailTemplate
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-8">
+    </div>
+    <div class="col-md-4">
+        <div hidden class="btn-group  float-right mt-1">
+            <a id="createEmailTemplateModal" asp-controller="EmailTemplate" asp-action="Create" class="btn btn-dark">
+                <i class="fa fa-plus"></i> New
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table id="tblEmailTemplate" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th><label asp-for="TemplateID" class="control-label"></label></th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                        <th><label asp-for="TemplateName" class="control-label"></label></th>
+                        <th><label asp-for="EmailTo" class="control-label"></label></th>
+                        <th><label asp-for="EmailCC" class="control-label"></label></th>
+                        <th><label asp-for="SubjectContent" class="control-label"></label></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

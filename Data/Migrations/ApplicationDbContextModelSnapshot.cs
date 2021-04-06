@@ -531,6 +531,33 @@ namespace SIS.Data.Migrations
                     b.ToTable("UserTokens");
                 });
 
+            modelBuilder.Entity("WebApi.Models.EmailTemplate", b =>
+                {
+                    b.Property<int>("TemplateID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmailCC")
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("EmailTo")
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("SubjectContent")
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("TemplateContent")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TemplateName")
+                        .HasColumnType("varchar(150)");
+
+                    b.HasKey("TemplateID");
+
+                    b.ToTable("EmailTemplates");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)

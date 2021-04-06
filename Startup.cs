@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using SIS.Data;
 using System;
 using System.Collections.Generic;
@@ -33,30 +36,10 @@ namespace SIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettingsSection = Configuration.GetSection("AppSettings");
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
-            services.Configure<AppSettings>(appSettingsSection);
-
-            // configure jwt authentication
-
-            var appSettings = appSettingsSection.Get<AppSettings>();
-
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
-            services.AddTransient<IUserService, UserService>();
-
-            services.AddScoped<IUserService, UserService>();
-
-            services.AddTransient<ICollegeService, CollegeService>();
-
-            services.AddScoped<ICollegeService, CollegeService>();
-
-            services.AddTransient<IStudentProfileService, StudentProfileService>();
-
-            services.AddScoped<IStudentProfileService, StudentProfileService>();
-
-            services.AddSingleton<IFileProvider>(
-                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -67,8 +50,13 @@ namespace SIS
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // in memory database used for simplicity, change to a real db for production applications
+
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -80,7 +68,8 @@ namespace SIS
                     builder => builder.RequireRole("Admin", "Registrar", "Registrar", "Staff"));
             });
 
-            services.AddMvc(setupAction => {
+            services.AddMvc(setupAction =>
+            {
                 setupAction.EnableEndpointRouting = false;
             }).AddJsonOptions(jsonOptions =>
             {
@@ -118,6 +107,35 @@ namespace SIS
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            services.AddCors();
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
+            services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddTransient<ICollegeService, CollegeService>();
+            services.AddScoped<ICollegeService, CollegeService>();
+
+
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
+
+
+            services.AddSingleton<IFileProvider>(
+            new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -141,6 +159,13 @@ namespace SIS
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+
+            // custom jwt auth middleware
 
             app.UseEndpoints(endpoints =>
             {

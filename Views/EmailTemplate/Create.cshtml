@@ -1,0 +1,174 @@
+﻿@model EmailTemplate
+@using WebApi.Models
+
+<div class="card card-default">
+    <div class="card-header">
+        <div class="card-title">Template - Create</div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="container">
+            <form id="frmTemplate" asp-action="Create" role="form" class="needs-validation">
+                <input type="hidden" asp-for="TemplateID" />
+                <input type="hidden" asp-for="TemplateContent" />
+                <div class="form-group row">
+                    <label asp-for="TemplateName" class="control-label col-md-2"></label>
+                    <div class="col-md-6">
+                        <input asp-for="TemplateName" class="form-control" required />
+                        <span asp-validation-for="TemplateName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="EmailTo" class="control-label col-md-2"></label>
+                    <div class="col-md-4">
+                        <input asp-for="EmailTo" type="email" class="form-control" required />
+                        <span asp-validation-for="EmailTo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="EmailCC" class="control-label col-md-2"></label>
+                    <div class="col-md-4">
+                        <input asp-for="EmailCC" type="email" class="form-control" required />
+                        <span asp-validation-for="EmailCC" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Email Subject</label>
+                    <div class="col-md-10">
+                        <textarea onfocus="SubjectSelected(true)" required class="form-control" cols="50" data-val="true"
+                                  data-val-maxlength="The field Description must be a string or array type with a maximum length of &#x27;250&#x27;."
+                                  data-val-maxlength-max="250"
+                                  data-val-minlength="The field Description must be a string or array type with a minimum length of &#x27;5&#x27;."
+                                  data-val-minlength-min="5"
+                                  id="SubjectContent" name="SubjectContent">@Model.SubjectContent</textarea>
+                        <span asp-validation-for="SubjectContent" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Email Body</label>
+                </div>
+
+                <div class="form-group">
+                    <div id="divEditor" class="summernote">@Html.Raw(Model.TemplateContent)</div>
+                </div>
+
+                <div class="form-group row float-right">
+                    <div class="col-md-12">
+                        <button type="button" id="btn-submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                        <a asp-controller="EmailTemplate" class="btn btn-dark" asp-action="Index"> Back To List</a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.css">
+
+@section scripts
+    {
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.js"></script>
+
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/summernote/summernote-image-attributes.js"></script>
+
+
+    <script src="~/lib/select2/select2.min.js"></script>
+    <script type="text/javascript">
+        var isFocused = false;
+        function SubjectSelected(f) {
+            isFocused = f;
+        }
+        function insertText(tagsAdd) {
+            if (isFocused == true) {
+                var cursorPos = $('#SubjectContent').prop('selectionStart');
+                var v = $('#SubjectContent').val();
+                var textBefore = v.substring(0, cursorPos);
+                var textAfter = v.substring(cursorPos, v.length);
+                $('#SubjectContent').val(textBefore + tagsAdd + textAfter);
+                $('#SubjectContent').focus();
+            } else {
+                $('#divEditor').summernote('code', tagsAdd);
+
+               // $('#divEditor').summernote('editor.insertText', tagsAdd);
+                isFocused = false;
+            }
+        }
+
+        $(document).ready(function () {
+
+            $('#SubjectContent').blur(function () {
+                isFocused = true;
+            });
+
+            $('.summernote').summernote({
+                height: 150,   //set editable area's height
+                codemirror: { // codemirror options
+                    theme: 'monokai'
+                },
+                dialogsInBody: true,
+                callbacks: {
+                    onBlur: function () {
+                        isFocused = false;
+                    }
+                },
+                imageAttributes: {
+                    icon: '<i class="note-icon-pencil"/>',
+                    figureClass: 'figureClass',
+                    figcaptionClass: 'captionClass',
+                    captionText: 'Caption Goes Here.',
+                    manageAspectRatio: true // true = Lock the Image Width/Height, Default to true
+                },
+                popover: {
+                    image: [
+
+                        ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                        ['remove', ['removeMedia']],
+                        ['custom', ['imageAttributes']],
+                    ],
+                },
+                imageAttributes: {
+                    icon: '<i class="note-icon-pencil"/>',
+                    removeEmpty: false, // true = remove attributes | false = leave empty if present
+                    disableUpload: true // true = don't display Upload Options | Display Upload Options
+                }
+            });
+            $('button[data-event="showImageDialog"]').attr('data-toggle', 'image').removeAttr('data-event');
+            $("#btnCustLastName").click(function () {
+                insertText('{CustomerLastName}');
+            });
+
+
+            $("#btn-submit").click(function () {
+                var tempText = $("#divEditor").summernote('code');
+
+                $("#TemplateContent").val(tempText);
+                if ($("#TemplateName").val() == "") {
+                    $("#TemplateName").focus();
+                    return;
+                }
+
+                $('#frmTemplate').submit()
+
+
+            });
+        })
+
+    </script>
+}
+
+<link rel="stylesheet" href="~/lib/select2/select2.min.css" />
+<link rel="stylesheet" href="~/lib/select2/select2-bootstrap4.min.css" />
+
+
+
+<link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css" />
+<link href="~/lib/bootstrap/icheck-bootstrap.min.css" rel="stylesheet" />

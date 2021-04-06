@@ -17,6 +17,7 @@ using WebApi.Services;
 using System.IO;
 using Microsoft.Extensions.Options;
 using WebApi.Helpers;
+using System.Text.Json;
 
 namespace SIS.Controllers
 {
@@ -26,6 +27,7 @@ namespace SIS.Controllers
     {
 
         private ICollegeService _collegeService;
+        private IEmailService _emailService;
         private readonly AppSettings _appSettings;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager; // used for authentication 
@@ -33,13 +35,14 @@ namespace SIS.Controllers
         private readonly ILogger<RegisterModel> _logger;
 
         public CollegeController(ApplicationDbContext context, SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager, ICollegeService collegeService, IOptions<AppSettings> appSettings)
+            ILogger<RegisterModel> logger, UserManager<IdentityUser> userManager, ICollegeService collegeService,IEmailService emailService, IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
             _context = context;
             _userManager = userManager;
             _logger = logger;
             _collegeService = collegeService;
+            _emailService = emailService;
             _appSettings = appSettings.Value;
         }
         public IActionResult Index()
@@ -139,13 +142,30 @@ namespace SIS.Controllers
                     //_context.Add(model);
 
                     _collegeService.Create(model);
+                    _emailService.Send(_appSettings.SmtpUser, "alvinmananquil@gmail.com", "New College", JsonSerializer.Serialize(model),"");
                 }
                 else
                 {
                     //_context.Update(model);
                     _collegeService.Update(model);
-                }
+                    var tempObj = await _context.EmailTemplates.FirstOrDefaultAsync(m => m.SubjectContent == "Update College");
 
+                    string emailSubject = "";
+                    string emailContent = "";
+                    if (tempObj != null)
+                    {
+                        emailSubject = tempObj.SubjectContent;
+                        emailContent = tempObj.TemplateContent;
+                        emailContent = emailContent.Replace("{CollegeCode}", model.CollegeCode);
+                        emailContent = emailContent.Replace("{CollegeName}", model.CollegeName);
+                        emailContent = emailContent.Replace("{NameofDean}", model.NameofDean);
+                        _emailService.Send(_appSettings.SmtpUser, tempObj.EmailTo, emailSubject, emailContent,tempObj.EmailCC);
+                    }
+                    else
+                    {
+                        _emailService.Send(_appSettings.SmtpUser, tempObj.EmailTo, "Edit College", JsonSerializer.Serialize(model),tempObj.EmailCC);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
