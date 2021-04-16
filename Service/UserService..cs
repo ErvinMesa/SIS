@@ -61,10 +61,10 @@ namespace WebApi.Services
         public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
         {
             //var user =  _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
-            var result = _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: false);
+            var result = _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: false).GetAwaiter().GetResult();
             UserToken user = new UserToken();
             // return null if user not found
-            if (result == null)
+            if (!result.Succeeded)
             {
                 return null;
             }
@@ -74,12 +74,12 @@ namespace WebApi.Services
             var refreshToken = generateRefreshToken(ipAddress);
 
 
-            user = (from u in _context.UserTokens where u.Username == model.Username select u).First();
+            user = (from u in _context.UserTokens where u.Username == model.Username select u).FirstOrDefault();
             // save refresh token
 
             if (user == null)
             {
-
+                user = new UserToken();
                 user.Username = model.Username;
                 user.RefreshTokens = new List<RefreshToken>();
                 user.RefreshTokens.Add(refreshToken);

@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using SIS.Data;
 using System;
 using System.Collections.Generic;
@@ -36,14 +37,14 @@ namespace SIS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
-
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
@@ -125,6 +126,8 @@ namespace SIS
             services.AddTransient<ICollegeService, CollegeService>();
             services.AddScoped<ICollegeService, CollegeService>();
 
+            services.AddTransient<IBuildingService, BuildingService>();
+            services.AddScoped<IBuildingService, BuildingService>();
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<IEmailService, EmailService>();
@@ -134,6 +137,10 @@ namespace SIS
             new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
 
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+            });
 
 
         }

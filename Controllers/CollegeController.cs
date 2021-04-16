@@ -21,7 +21,6 @@ using System.Text.Json;
 
 namespace SIS.Controllers
 {
-
     [Authorize(Roles = "Registrar, Staff")]
     public class CollegeController : Controller
     {
