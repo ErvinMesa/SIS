@@ -62,6 +62,8 @@ namespace WebApi.Services
 
         public College Create(College model)
         {
+            Guid gid = Guid.NewGuid();
+            model.FileStamp = gid.ToString();
             _context.Add(model);
             _context.SaveChanges();
             return model;
@@ -95,6 +97,7 @@ namespace WebApi.Services
                              IsActive = c.IsActive,
                              RecognizeDate = c.RecognizeDate,
                              NumberOfProgram = c.NumberOfProgram,
+                             NameofDean = c.NameofDean,
                              Logo = URLImage + c.Logo,
                              LogoImageUrl = c.LogoImageUrl
                          }).ToList();

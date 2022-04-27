@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using WebApi.Models;
+using WebApi.Entities;
 using WebApi.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -9,20 +16,21 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using SIS.Data;
 using SIS.Models;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace WebApi.Services
 {
-    public interface IBuildingService
+    public interface IProvinceService
     {
-        Building Create(Building model);
-        Building Update(Building model);
-        string Delete(Building model);
-        IEnumerable<Building> GetAll();
-        Building GetBuildingInfo(int id);
+        Province Create(Province model);
+        Province Update(Province model);
+        string Delete(Province model);
+        IEnumerable<Province> GetAll();
+        Province GetProvinceInfo(int id);
     }
-
-    public class BuildingService : IBuildingService
+    public class ProvinceService : IProvinceService
     {
         private ApplicationDbContext _context;
         private readonly AppSettings _appSettings;
@@ -33,7 +41,7 @@ namespace WebApi.Services
         RoleManager<IdentityRole> _roleManager;
 
 
-        public BuildingService(
+        public ProvinceService(
             ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -51,49 +59,51 @@ namespace WebApi.Services
             _appSettings = appSettings.Value;
         }
 
-        public Building Create(Building model)
+        // public Province Create(Province model)
+        // {
+        //     _context.Add(model);
+        //     _context.SaveChanges();
+        //     return model;
+        // }
+        public Province Create(Province model)
         {
-             _context.Add(model);
+            Guid gid = Guid.NewGuid();
+            _context.Add(model);
             _context.SaveChanges();
             return model;
         }
 
-        public Building Update(Building model)
+        public Province Update(Province model)
         {
             _context.Update(model);
             _context.SaveChanges();
             return model;
         }
 
-        public Building GetBuildingInfo(int id)
+        public Province GetProvinceInfo(int id)
         {
-            var model = _context.Buildings.FirstOrDefault(m => m.BuildingID == id);
-            var URLImage = _appSettings.URLImage;
- 
+            var model = _context.Provinces.FirstOrDefault(m => m.ProvinceID == id);
             return model;
         }
 
-        public IEnumerable<Building> GetAll()
+        public IEnumerable<Province> GetAll()
         {
-            var URLImage = _appSettings.URLImage;
-            var model = (from c in _context.Buildings
-                         select new Building
+            var model = (from c in _context.Provinces
+                         select new Province
                          {
-                             BuildingID = c.BuildingID,
-                             BuildingCode = c.BuildingCode,
-                             BuildingName = c.BuildingName,
-                             NumberofFloors = c.NumberofFloors,
+                             ProvinceID = c.ProvinceID,
+                             ProvinceName = c.ProvinceName,
                          }).ToList();
 
             return model;
         }
 
-        public string Delete(Building model)
+        public string Delete(Province model)
         {
             string msg = "DELETED";
             try
             {
-                _context.Buildings.Remove(model);
+                _context.Provinces.Remove(model);
                 _context.SaveChanges();
             }
             catch (Exception e)

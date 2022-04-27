@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using SIS.Data;
 using SIS.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace WebApi.Services
 {
@@ -61,14 +63,16 @@ namespace WebApi.Services
         public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
         {
             //var user =  _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+          
             var result = _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: false).GetAwaiter().GetResult();
+            
             UserToken user = new UserToken();
             // return null if user not found
-            if (!result.Succeeded)
+            if (result.Succeeded != true)
             {
                 return null;
             }
-   
+
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = generateJwtToken(user);
             var refreshToken = generateRefreshToken(ipAddress);
@@ -80,6 +84,7 @@ namespace WebApi.Services
             if (user == null)
             {
                 user = new UserToken();
+
                 user.Username = model.Username;
                 user.RefreshTokens = new List<RefreshToken>();
                 user.RefreshTokens.Add(refreshToken);

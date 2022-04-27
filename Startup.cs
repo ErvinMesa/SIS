@@ -126,12 +126,26 @@ namespace SIS
             services.AddTransient<ICollegeService, CollegeService>();
             services.AddScoped<ICollegeService, CollegeService>();
 
+            services.AddTransient<ICityService, CityService>();
+            services.AddScoped<ICityService, CityService>();
+
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddScoped<IBuildingService, BuildingService>();
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<IEmailService, EmailService>();
 
+            services.AddTransient<IProvinceService, ProvinceService>();
+            services.AddScoped<IProvinceService, ProvinceService>();
+
+            services.AddTransient<IFacultyService, FacultyService>();
+            services.AddScoped<IFacultyService, FacultyService>();
+
+            services.AddTransient<ISemesterService, SemesterService>();
+            services.AddScoped<ISemesterService, SemesterService>();
+
+            services.AddTransient<ICourseService, CourseService>();
+            services.AddScoped<ICourseService, CourseService>();
 
             services.AddSingleton<IFileProvider>(
             new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/AppPhoto")));
